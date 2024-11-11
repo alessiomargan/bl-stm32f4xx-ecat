@@ -16,13 +16,13 @@
 void led_on() {
     // Code to turn on the LED (replace with actual hardware-specific code)
     //printf("LED ON\n");
-    GRN_ON;
+    LED_1_ON;
 }
 
 void led_off() {
     // Code to turn off the LED (replace with actual hardware-specific code)
     //printf("LED OFF\n");
-    GRN_OFF;
+    LED_1_OFF;
 }
 
 // Morse timings (in microseconds)
