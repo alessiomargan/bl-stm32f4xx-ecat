@@ -10,6 +10,7 @@
 //#include <params.h>
 #include <flash_utils.h>
 #include <user_code.h>
+#include <morse.h>
 
 #include <stdio.h>
 #include <main.h>
@@ -19,9 +20,7 @@ extern uint32_t ESC_SYNCactivation(void);
 extern esc_cfg_t config;
 //
 uint32_t uid[3];
-// morse led
-const char *message = "boot  ";
-extern void update_led(const char *);
+uint8_t btn_1_pressed = 0;
 
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 /**
@@ -45,15 +44,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		ecat_slv();
 		DBG_1_OFF;
 	} else if (GPIO_Pin == BTN_1_Pin) {
-
+		btn_1_pressed = 1;
 	}
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
-	if (htim->Instance == TIM6) {
-		HAL_IncTick();
-	}
+	//if (htim->Instance == TIM6) {
+	//	HAL_IncTick();
+	//}
 	if (htim->Instance == TIM7) {
 		DBG_2_ON;
 		if ( ! ESC_SYNCactivation() ) {
@@ -89,7 +88,7 @@ static inline uint8_t test_jump2app(void) {
 	uint8_t crc_ok = sdo.ram.crc_cal == sdo.ram.crc_app;
 	// poll button ... 0 pressed
 	// sw1 == 1 ==> pressed
-	//sw1 = (~MAP_GPIO_getInputPinValue(PORT_SWITCH, SW1_PIN)) & 0x1;
+	//sw1 = HAL_GPIO_ReadPin(BTN_1_GPIO_Port,BTN_1_Pin);
 #ifdef HAVE_BOOT_PIN
 	ecat_boot = MAP_GPIO_getInputPinValue(PORT_ECAT_BOOT, PIN_ECAT_BOOT);
 #else
@@ -102,7 +101,7 @@ static inline uint8_t test_jump2app(void) {
 	return ret;
 }
 
-static inline void jump2app(void) {
+void jump2app(void) {
 
 	/* Set system control register SCR->VTOR  */
 	SCB->VTOR = FLASH_APP_ADDR;
@@ -115,6 +114,7 @@ static inline void jump2app(void) {
 static inline void try_boot(void) {
 
     if ( test_jump2app() ) {
+    	__disable_irq();
         jump2app();
     }
 }
@@ -122,14 +122,14 @@ static inline void try_boot(void) {
 void user_code_init(void) {
 
 	read_UID();
-	DPRINT("Start =====>\n");
+	DPRINT("\n\n===> Start Bootloader ===>\n");
 	sdo.ram.crc_cal = Calc_CRC(FLASH_APP_ADDR, (FLASH_APP_BSIZE/4)-1);
 	sdo.ram.crc_app = *(uint32_t*)(FLASH_APP_ADDR+FLASH_APP_BSIZE-4);
 	print_sdo(&sdo.ram);
-	/* Init soes */
-	ecat_slv_init(&config);
 	/* try boot application */
 	try_boot();
+	/* Init soes */
+	ecat_slv_init(&config);
 	/* timer initialization with interrupt mode */
 	HAL_TIM_Base_Start_IT(&htim7);
 
@@ -138,7 +138,6 @@ void user_code_init(void) {
 void user_code_loop(void) {
 
 	HAL_Delay(100);
-	update_led(message);
-	LED_1_TGL;
+	do_morse_led();
 
 }

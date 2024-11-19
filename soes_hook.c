@@ -12,6 +12,7 @@
 void Default_Object_Handler(uint8_t) __attribute__((weak));
 
 extern void Handle_0x8001(uint8_t) __attribute__((weak, alias("Default_Object_Handler")));
+extern void jump2app(void);
 
 void pre_state_change_hook (uint8_t * as, uint8_t * an);
 void post_state_change_hook (uint8_t * as, uint8_t * an);
@@ -80,6 +81,14 @@ void pre_state_change_hook (uint8_t * as, uint8_t * an)
 void post_state_change_hook (uint8_t * as, uint8_t * an)
 {
     DPRINT ("post_state_change_hook 0x%02X %d\n", *as, *an);
+
+    if ((*as == BOOT_TO_INIT) && (*an == ESCinit)) {
+		if (sdo.ram.crc_cal == sdo.ram.crc_app) {
+			jump2app();
+		} else {
+			DPRINT("Fail jump2app\n");
+		}
+	}
 }
 
 uint16_t check_dc_handler_hook(void) {

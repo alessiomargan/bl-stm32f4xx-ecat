@@ -20,7 +20,6 @@ void print_sdo(const ram_sdo_t *s) {
 	DPRINT("sdo.ram.bl_ver=%s\n", s->bl_ver);
     DPRINT("sdo.ram.crc_app=%" PRIX32 "\n", s->crc_app);
     DPRINT("sdo.ram.crc_cal=%" PRIX32 "\n", s->crc_cal);
-    printf("\n");
 }
 
 
@@ -46,8 +45,8 @@ foe_file_cfg_t      gFOE_firmware_files[] = {
 	},
 	{
 		.name =					"params.bin",
-		.max_data = 			FLASH_PARAM_BSIZE, 	// sector size ?!?
-		.dest_start_address =	FLASH_PARAM_ADDR, 	//
+		.max_data = 			FLASH_PAR_BSIZE, 	// sector size ?!?
+		.dest_start_address =	FLASH_PAR_ADDR, 	//
 		.address_offset =		0,
 		.filepass =				0xA4A4,
 	//	.write_function =		foe_write_flash,
@@ -57,8 +56,8 @@ foe_file_cfg_t      gFOE_firmware_files[] = {
 	},
 	{
 		.name =					"calib.bin",
-		.max_data = 			FLASH_CALIB_BSIZE, 	// sector size ?!?
-		.dest_start_address =	FLASH_CALIB_ADDR, 	//
+		.max_data = 			FLASH_CAL_BSIZE, 	// sector size ?!?
+		.dest_start_address =	FLASH_CAL_ADDR, 	//
 		.address_offset =		0,
 		.filepass =				0xCA71,
 		.write_function =		foe_write_cal_mat,

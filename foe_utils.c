@@ -35,8 +35,14 @@ uint32_t on_foe_close_cb( void ) {
 	uint32_t crc_addr = FLASH_APP_ADDR+FLASH_APP_BSIZE-4;
 	crc_app = Calc_CRC(FLASH_APP_ADDR, (FLASH_APP_BSIZE/4)-1);
 	uint32_t ret = Write_Flash_W(crc_addr, (void*)&crc_app, sizeof(crc_app));
-	sdo.ram.crc_app = *(uint32_t*)(FLASH_APP_ADDR+FLASH_APP_BSIZE-4);
-	DPRINT("%s crc_addr 0x%04X crc_app 0x%04X\n", __FUNCTION__, crc_addr, sdo.ram.crc_app);
+	if (ret == HAL_OK) {
+		sdo.ram.crc_app = *(uint32_t*)(FLASH_APP_ADDR+FLASH_APP_BSIZE-4);
+		sdo.ram.crc_cal = crc_app;
+		DPRINT("%s crc_addr 0x%04X crc_app 0x%04X\n", __FUNCTION__, crc_addr, sdo.ram.crc_app);
+	} else {
+		DPRINT("%s FAIL write at crc_addr 0x%04X crc_app 0x%04X\n", __FUNCTION__, crc_addr, sdo.ram.crc_app);
+	}
+
 	return ret;
 }
 

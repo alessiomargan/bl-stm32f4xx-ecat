@@ -48,13 +48,13 @@ int Erase_Flash_StartAddr(uint32_t flash_addr) {
 	eraseInfo.VoltageRange = FLASH_VOLTAGE_RANGE_3;
 
 	switch (flash_addr) {
-	case FLASH_PARAM_ADDR:
-		eraseInfo.Sector = FLASH_PARAM_SECTOR;
-		eraseInfo.NbSectors = FLASH_PARAM_NSECTORS;			// number of sectors to be erased.
+	case FLASH_PAR_ADDR:
+		eraseInfo.Sector = FLASH_PAR_SECTOR;
+		eraseInfo.NbSectors = FLASH_PAR_NSECTORS;			// number of sectors to be erased.
 		break;
-	case FLASH_CALIB_ADDR:
-		eraseInfo.Sector = FLASH_CALIB_SECTOR;
-		eraseInfo.NbSectors = FLASH_CALIB_NSECTORS;			// number of sectors to be erased.
+	case FLASH_CAL_ADDR:
+		eraseInfo.Sector = FLASH_CAL_SECTOR;
+		eraseInfo.NbSectors = FLASH_CAL_NSECTORS;			// number of sectors to be erased.
 		break;
 	case FLASH_APP_ADDR:
 		eraseInfo.Sector = FLASH_APP_SECTOR;
