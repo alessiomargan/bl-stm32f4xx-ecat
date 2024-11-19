@@ -50,9 +50,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
-	//if (htim->Instance == TIM6) {
-	//	HAL_IncTick();
-	//}
 	if (htim->Instance == TIM7) {
 		DBG_2_ON;
 		if ( ! ESC_SYNCactivation() ) {
@@ -103,6 +100,8 @@ static inline uint8_t test_jump2app(void) {
 
 void jump2app(void) {
 
+	HAL_TIM_Base_Stop_IT(&htim7);
+
 	/* Set system control register SCR->VTOR  */
 	SCB->VTOR = FLASH_APP_ADDR;
 	//__disable_irq();
@@ -114,7 +113,7 @@ void jump2app(void) {
 static inline void try_boot(void) {
 
     if ( test_jump2app() ) {
-    	__disable_irq();
+    	//__disable_irq();
         jump2app();
     }
 }
@@ -122,7 +121,7 @@ static inline void try_boot(void) {
 void user_code_init(void) {
 
 	read_UID();
-	DPRINT("\n\n===> Start Bootloader ===>\n");
+	DPRINT("***** Start Bootloader *****\n");
 	sdo.ram.crc_cal = Calc_CRC(FLASH_APP_ADDR, (FLASH_APP_BSIZE/4)-1);
 	sdo.ram.crc_app = *(uint32_t*)(FLASH_APP_ADDR+FLASH_APP_BSIZE-4);
 	print_sdo(&sdo.ram);
