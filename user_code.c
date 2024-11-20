@@ -98,9 +98,7 @@ static inline uint8_t test_jump2app(void) {
 	return ret;
 }
 
-void jump2app(void) {
-
-	HAL_TIM_Base_Stop_IT(&htim7);
+static inline void jump2app(void) {
 
 	/* Set system control register SCR->VTOR  */
 	SCB->VTOR = FLASH_APP_ADDR;
@@ -113,6 +111,7 @@ void jump2app(void) {
 static inline void try_boot(void) {
 
     if ( test_jump2app() ) {
+    	HAL_TIM_Base_Stop_IT(&htim7);
     	//__disable_irq();
         jump2app();
     }
