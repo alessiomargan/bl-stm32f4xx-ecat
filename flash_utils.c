@@ -43,7 +43,6 @@ int Erase_Flash_StartAddr(uint32_t flash_addr) {
 	FLASH_EraseInitTypeDef eraseInfo;
 	eraseInfo.TypeErase = FLASH_TYPEERASE_SECTORS;
 	eraseInfo.Banks = FLASH_BANK_1;
-	eraseInfo.Sector = -1;
 	eraseInfo.NbSectors = 0;			// number of sectors to be erased.
 	eraseInfo.VoltageRange = FLASH_VOLTAGE_RANGE_3;
 
@@ -64,7 +63,7 @@ int Erase_Flash_StartAddr(uint32_t flash_addr) {
 		break;
 	}
 
-	if (eraseInfo.NbSectors != 0 && eraseInfo.Sector != -1) {
+	if (eraseInfo.NbSectors != 0) {
 		flashStatus = Erase_Flash(&eraseInfo);
 	}
 	return flashStatus;
