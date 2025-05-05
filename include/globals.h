@@ -52,6 +52,7 @@ extern uint8_t		foe_buffer[0x400];
 extern foe_file_cfg_t	gFOE_firmware_files[];
 
 void print_sdo(const ram_sdo_t *);
+void print_build_info(void);
 
 uint32_t foe_write_flash(foe_file_cfg_t *, uint8_t * data, size_t length);
 uint32_t foe_read_flash(foe_file_cfg_t *, uint8_t * data, size_t length);

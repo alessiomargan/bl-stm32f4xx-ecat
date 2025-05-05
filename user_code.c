@@ -70,7 +70,7 @@ static inline uint32_t read_user_RAM(void) {
 
 	uint32_t value;
 	ESC_read(0xF80, &value, sizeof(value));
-	DPRINT("user_RAM 0x%X\n", value);
+	DPRINT("user_RAM 0x%"PRIx32"\n", value);
 	return value;
 }
 /*
@@ -121,6 +121,7 @@ void user_code_init(void) {
 
 	read_UID();
 	DPRINT("***** Start Bootloader *****\n");
+	print_build_info();
 	sdo.ram.crc_cal = Calc_CRC(FLASH_APP_ADDR, (FLASH_APP_BSIZE/4)-1);
 	sdo.ram.crc_app = *(uint32_t*)(FLASH_APP_ADDR+FLASH_APP_BSIZE-4);
 	print_sdo(&sdo.ram);

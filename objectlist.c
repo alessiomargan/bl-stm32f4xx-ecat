@@ -4,6 +4,13 @@
 #include <soes/esc_coe.h>
 #include <globals.h>
 
+extern const uint32_t 	CRC_App;
+extern const uint8_t 	BLDR_Version[];
+extern const uint8_t	git_hash[];
+extern const uint8_t	git_branch[];
+extern const uint8_t    git_tag[];
+extern const uint8_t	build_ts[];
+
 static const char Number_of_elements[] = "Number of Elements";
 //static const char mapped_obj[] = "Mapped Object";
 
@@ -115,7 +122,15 @@ const _objd SDO8001[] =
   {0x7, DTYPE_UNSIGNED32,   	32, ATYPE_RO, 	"crc_ok",  		0, &sdo.ram.crc_cal},
 };
 
-
+// build info
+const _objd SDO9009[] =
+{
+  {0x0,  DTYPE_UNSIGNED8,        8, ATYPE_RO,   "NumElem",      4, 0},
+  {0x1, DTYPE_VISIBLE_STRING,   64, ATYPE_RO,   "git_hash",     0, &git_hash},
+  {0x2, DTYPE_VISIBLE_STRING,   64, ATYPE_RO,   "git_branch",   0, &git_branch},
+  {0x3, DTYPE_VISIBLE_STRING,   64, ATYPE_RO,   "git_tag",      0, &git_tag},
+  {0x4, DTYPE_VISIBLE_STRING,   64, ATYPE_RO,   "build_ts",     0, &build_ts},
+};
 
 const _objectlist SDOobjects[] =
 {
@@ -133,7 +148,8 @@ const _objectlist SDOobjects[] =
   {0x1C32, OTYPE_RECORD, 	 5,  0, "SM2(Output) Synchronisation  Parameter", SDO1C32},
   {0x6000, OTYPE_RECORD,	 0,  0, "Inputs", SDO6000},
   {0x7000, OTYPE_RECORD,     0,  0, "Outputs", SDO7000},
-  {0x8001, OTYPE_RECORD,     7,  0, "Ram Parameters", SDO8001},
+  {0x8000, OTYPE_RECORD,     6,  0, "Ram Parameters", SDO8001},
+  {0x9009, OTYPE_RECORD,     4,  0, "Build_info",  SDO9009},
   {0xffff, 0xff, 0xff, 0xff, 0, 0}
 };
 
